@@ -34,6 +34,6 @@ jobs:
           git config user.name "ghostmail-bot"
           git config user.email "bot@ghostmail.io"
           git add data/disposable_emails.txt
-          # Убедимся, что коммит успешен перед пушем (хотя || echo "No changes" уже это делает)
+          # Make sure the commit succeeds before pushing (although || echo "No changes" already does that)
           git commit -m "Auto-update disposable email list" || echo "No changes to commit"
           git push
