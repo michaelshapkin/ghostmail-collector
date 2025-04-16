@@ -19,7 +19,7 @@ This repository is updated **daily** via GitHub Actions and includes known domai
 You can find the full list here:
 ➡️ [data/disposable_emails.txt](data/disposable_emails.txt)
 
-Plain  file, one domain per line, ready for:
+Plain `.txt` file, one domain per line, ready for:
 
 - Email validation
 - Anti-spam filters
@@ -33,7 +33,7 @@ Plain  file, one domain per line, ready for:
 1. Python script fetches data from multiple open-source repositories.
 2. Domains are extracted, cleaned, and deduplicated.
 3. GitHub Actions runs the script automatically every 24h.
-4. Cleaned output is committed to this repo in .
+4. Cleaned output is committed to this repo in `data/disposable_emails.txt`.
 
 ---
 
@@ -54,5 +54,3 @@ PRs with new sources welcome!
 
 ```bash
 python src/collector.py
-```
-
