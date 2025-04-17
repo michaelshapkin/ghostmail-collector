@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write 
+  contents: write
 
-jobs: 
+jobs:
   update:
     runs-on: ubuntu-latest
 
@@ -22,15 +22,18 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Run collector script
         run: python src/collector.py
+        continue-on-error: false
 
       - name: Commit and push changes
         run: |
           git config user.name "ghostmail-bot"
           git config user.email "bot@ghostmail.io"
-          git add data/disposable_emails.txt data/collector_log_*.txt
+          git add data/disposable_emails.txt
           git commit -m "Auto-update disposable email list" || echo "No changes to commit"
           git push
