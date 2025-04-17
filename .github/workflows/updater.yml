@@ -14,10 +14,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
@@ -28,12 +28,11 @@ jobs:
 
       - name: Run collector script
         run: python src/collector.py
-        continue-on-error: false
 
       - name: Commit and push changes
         run: |
           git config user.name "ghostmail-bot"
           git config user.email "bot@ghostmail.io"
-          git add data/disposable_emails.txt
+          git add data/raw_domains.txt data/disposable_emails.txt data/collector_log_*.txt
           git commit -m "Auto-update disposable email list" || echo "No changes to commit"
           git push

@@ -3,7 +3,6 @@ import os
 import json
 import re
 from datetime import datetime
-import dns.resolver
 
 # List of sources for disposable email domains
 SOURCES = [
@@ -30,20 +29,11 @@ def is_valid_domain(domain):
         return False
     return bool(pattern.match(domain))
 
-def has_mx_record(domain, timeout=5):
-    """Check if domain has an MX record."""
-    try:
-        dns.resolver.resolve(domain, 'MX', lifetime=timeout)
-        return True
-    except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.Timeout):
-        return False
-
 def fetch_domains():
     """Fetch disposable email domains from multiple sources."""
     domains = set()
     log_entries = []
     invalid_domains = []
-    no_mx_domains = []
 
     for url in SOURCES:
         try:
@@ -73,14 +63,6 @@ def fetch_domains():
                             else:
                                 invalid_domains.append(f"{domain} (from {url})")
                 
-                # Sample MX check for up to 10 domains
-                sample_size = min(10, len(source_domains))
-                sample = list(source_domains)[:sample_size]
-                no_mx_sample = [d for d in sample if not has_mx_record(d)]
-                if no_mx_sample:
-                    log_entries.append(f"Warning: {len(no_mx_sample)}/{sample_size} sampled domains from {url} have no MX records: {', '.join(no_mx_sample[:5])}")
-                    no_mx_domains.extend(f"{d} (from {url})" for d in no_mx_sample)
-                
                 # Calculate unique domains added by this source
                 unique_to_source = source_domains - domains
                 domains.update(source_domains)
@@ -98,8 +80,6 @@ def fetch_domains():
         f.write("\n".join(log_entries))
         if invalid_domains:
             f.write("\nInvalid domains excluded:\n" + "\n".join(invalid_domains[:100]))
-        if no_mx_domains:
-            f.write("\nDomains without MX records (sampled):\n" + "\n".join(no_mx_domains[:100]))
 
     return sorted(domains)
 
@@ -110,7 +90,10 @@ def save_domains(domains, filepath):
             f.write(f"{domain}\n")
 
 if __name__ == "__main__":
-    output_path = os.path.join("data", "disposable_emails.txt")
+    raw_output_path = os.path.join("data", "raw_domains.txt")
+    final_output_path = os.path.join("data", "disposable_emails.txt")
     all_domains = fetch_domains()
-    save_domains(all_domains, output_path)
-    print(f"Saved {len(all_domains)} domains to {output_path}")
+    save_domains(all_domains, raw_output_path)
+    save_domains(all_domains, final_output_path)
+    print(f"Saved {len(all_domains)} domains to {raw_output_path}")
+    print(f"Saved {len(all_domains)} domains to {final_output_path}")
