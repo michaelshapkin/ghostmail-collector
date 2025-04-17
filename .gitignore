@@ -2,8 +2,12 @@
 .DS_Store
 src/.DS_Store
 
-# Logs
+# Ignore all logs
 data/collector_log_*.txt
+
+# But allow them to be committed manually by the bot
+!data/collector_log_*.txt
+
 
 # Local scripts
 check_mx.py
@@ -15,5 +19,7 @@ venv/
 # Python cache
 __pycache__/
 *.pyc
+
+
 
 
