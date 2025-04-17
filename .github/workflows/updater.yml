@@ -5,10 +5,8 @@ on:
     - cron: "0 4 * * *"  # every day at 04:00 UTC
   workflow_dispatch:
 
-
 permissions:
   contents: write 
-
 
 jobs: 
   update:
@@ -24,7 +22,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install -r requirements.txt
 
       - name: Run collector script
         run: python src/collector.py
@@ -33,7 +31,6 @@ jobs:
         run: |
           git config user.name "ghostmail-bot"
           git config user.email "bot@ghostmail.io"
-          git add data/disposable_emails.txt
-          # Make sure the commit succeeds before pushing (although || echo "No changes" already does that)
+          git add data/disposable_emails.txt data/collector_log_*.txt
           git commit -m "Auto-update disposable email list" || echo "No changes to commit"
           git push

@@ -1,3 +1,17 @@
+# System files
+.DS_Store
+src/.DS_Store
+
+# Logs
+data/collector_log_*.txt
+
+# Local scripts
+check_mx.py
+validate.py
+
+# Virtual environment
 venv/
+
+# Python cache
 __pycache__/
 *.pyc
