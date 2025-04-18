@@ -82,9 +82,10 @@ The collector aggregates domains from the following trusted sources:
 
 ---
 
+
 ### 📊 Stats
 
-- **Total domains:** ~180,000 (deduplicated across all sources)  
-- **MX-validated domains:** ~32,000 (domains with active MX records)  
-- **Update frequency:** Daily at 04:00 UTC (via GitHub Actions)  
-- **Processing time:** ~15–20 minutes (fetching + MX checks)
+- **Total domains:** ~180,000 (deduplicated across all sources)
+- **MX-validated domains:** ~4,600 (domains confirmed with active MX records via strict check)
+- **Update frequency:** Daily at 04:00 UTC (via GitHub Actions)
+- **Processing time:** ~30–40 minutes (fetching + MX checks using 10 workers)
