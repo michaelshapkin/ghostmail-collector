@@ -1,3 +1,4 @@
 requests
 dnspython
-tqdm
+tqdmpytest
+pytest-mock
