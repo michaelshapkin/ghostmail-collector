@@ -1,0 +1,48 @@
+# .github/workflows/tests.yml
+name: Run Python Tests
+
+on:
+  # Run on pushes to the main branch
+  push:
+    branches: [ main ]
+  # Run on pushes to any other branch (including feature branches)
+  # We might want to restrict this later if it becomes too noisy
+  # push:
+  #   branches-ignore: [ main ] # Example: run only on non-main pushes
+
+  # Run on Pull Requests targeting the main branch
+  pull_request:
+    branches: [ main ]
+
+  # Allow manual triggering from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # Run tests on multiple Python versions (optional but good practice)
+        python-version: ['3.13'] # Adjust versions as needed
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # Install requirements, including pytest and pytest-mock
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          # Ensure test dependencies are installed even if not in requirements.txt yet for some reason
+          pip install pytest pytest-mock
+
+      - name: Run tests with pytest
+        run: |
+          # Run pytest, using python -m ensures it uses the correct environment
+          PYTHONPATH=src python -m pytest
