@@ -134,27 +134,24 @@ Workflows are defined in `.github/workflows/`.
 
 ## Project Structure
 
-.
-├── .github/workflows/  # GitHub Actions workflows
-│   ├── updater.yml
-│   └── tests.yml
-├── data/               # Output data (mostly ignored except for committed lists)
-│   ├── disposable_emails.txt  # Validated MX domains (COMMITTED)
-│   └── raw_domains.txt        # All collected domains (COMMITTED)
-│   └── .gitignore             # Ignores logs, samples etc. in data/
-├── src/                # Source code
-│   └── collector.py
-├── tests/              # Pytest tests
-│   ├── __init__.py
-│   └── test_collector.py
-├── .gitignore          # Git ignore rules for the root
-├── CHEATSHEET.md       # This file
-├── LICENSE             # Project license (Consider adding one!)
-├── README.md           # Project description
-├── requirements.txt    # Python dependencies
-└── pyproject.toml      # Project config (includes pytest settings)
-
-
++-- .github/workflows/  # GitHub Actions workflows
+|   +-- updater.yml
+|   L-- tests.yml
++-- data/               # Output data (mostly ignored except for committed lists)
+|   +-- disposable_emails.txt  # Validated MX domains (COMMITTED)
+|   +-- raw_domains.txt        # All collected domains (COMMITTED)
+|   L-- .gitignore             # Ignores logs, samples etc. in data/
++-- src/                # Source code
+|   L-- collector.py
++-- tests/              # Pytest tests
+|   +-- __init__.py
+|   L-- test_collector.py
++-- .gitignore          # Git ignore rules for the root
++-- CHEATSHEET.md       # This file
++-- LICENSE             # Project license (Consider adding one!)
++-- README.md           # Project description
++-- requirements.txt    # Python dependencies
+L-- pyproject.toml      # Project config (includes pytest settings)
 ---
 
 ## Common Issues / Troubleshooting
