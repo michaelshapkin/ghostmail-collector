@@ -133,7 +133,7 @@ Workflows are defined in `.github/workflows/`.
 ---
 
 ## Project Structure
-
+.
 +-- .github/workflows/  # GitHub Actions workflows
 |   +-- updater.yml
 |   L-- tests.yml
@@ -152,6 +152,7 @@ Workflows are defined in `.github/workflows/`.
 +-- README.md           # Project description
 +-- requirements.txt    # Python dependencies
 L-- pyproject.toml      # Project config (includes pytest settings)
+
 ---
 
 ## Common Issues / Troubleshooting
