@@ -45,4 +45,4 @@ jobs:
       - name: Run tests with pytest
         run: |
           # Run pytest, using python -m ensures it uses the correct environment
-          python -m pytest
+          PYTHONPATH=src python -m pytest
