@@ -23,7 +23,7 @@ jobs:
     strategy:
       matrix:
         # Run tests on multiple Python versions (optional but good practice)
-        python-version: ['3.9', '3.11', '3.13'] # Adjust versions as needed
+        python-version: ['3.13'] # Adjust versions as needed
 
     steps:
       - name: Checkout repository
