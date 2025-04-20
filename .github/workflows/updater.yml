@@ -2,37 +2,178 @@ name: Update Disposable Email List
 
 on:
   schedule:
-    - cron: "0 4 * * *"  # every day at 04:00 UTC
-  workflow_dispatch:
+    - cron: "0 4 * * *" # every day at 04:00 UTC
+  workflow_dispatch: # Allows manual triggering
+    inputs:
+      mx_workers:
+        description: 'Number of workers for MX checks'
+        required: false
+        default: '10'
+      dns_timeout:
+        description: 'DNS query timeout (seconds)'
+        required: false
+        default: '10'
+      retry_attempts:
+        description: 'Number of retry attempts for DNS queries'
+        required: false
+        default: '3'
+      retry_delay:
+        description: 'Delay between DNS retries (seconds)'
+        required: false
+        default: '2'
 
 permissions:
-  contents: write
+  contents: write # Allow workflow to commit changes
 
 jobs:
   update:
     runs-on: ubuntu-latest
+    # Set environment variables for the job
+    # Use inputs from workflow_dispatch if provided, otherwise use defaults
+    env:
+      MX_WORKERS: ${{ github.event.inputs.mx_workers || '10' }}
+      DNS_TIMEOUT: ${{ github.event.inputs.dns_timeout || '10' }}
+      RETRY_ATTEMPTS: ${{ github.event.inputs.retry_attempts || '3' }}
+      RETRY_DELAY: ${{ github.event.inputs.retry_delay || '2' }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        # Fetch history needed for git diff
+        with:
+          fetch-depth: 2 # Fetch current and previous commit
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.11' # Or your preferred version
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Install dnsutils (for dig) and jq
+        run: |
+          sudo apt-get update && sudo apt-get install -y dnsutils jq
 
       - name: Run collector script
         run: python src/collector.py
+        # Environment variables set at the job level are automatically available
+
+      - name: Analyze changes (diff)
+        id: diff_analysis
+        run: |
+          # Ensure git knows who we are for diff commands if needed, though not strictly necessary here
+          git config user.name "ghostmail-bot"
+          git config user.email "bot@ghostmail.io"
+
+          echo "--- Diff stats ---"
+          # Use git diff against the previous state (HEAD^) for the data files
+          # Need to ensure the files exist before diffing
+          touch data/disposable_emails.txt data/raw_domains.txt # Create if they don't exist from previous commit
+          git diff --stat HEAD^ -- data/disposable_emails.txt data/raw_domains.txt || echo "No changes in data files or first run."
+
+          echo "--- Saving full diff ---"
+          # Save the diff to a file
+          git diff HEAD^ -- data/disposable_emails.txt data/raw_domains.txt > data/changes.diff || echo "Could not generate diff."
+
+      - name: Upload diff artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: data-changes-diff-${{ github.run_id }}
+          path: data/changes.diff
+          if-no-files-found: ignore # Don't fail if diff is empty
+
+      - name: Run dig cross-check
+        id: dig_check
+        run: |
+          echo "--- Running dig cross-check ---"
+          if [[ ! -f data/mx_check_samples.json ]]; then
+            echo "WARNING: data/mx_check_samples.json not found! Skipping dig check."
+            exit 0 # Don't fail the workflow, just skip
+          fi
+
+          mismatch_count=0
+          match_count=0
+
+          # Use jq to loop through JSON array entries safely
+          jq -c '.[]' data/mx_check_samples.json | while IFS= read -r i; do
+            domain=$(echo "$i" | jq -r '.domain')
+            py_status=$(echo "$i" | jq -r '.status')
+
+            echo "------------------"
+            echo "Checking domain: $domain (Python status: $py_status)"
+
+            # Run dig with timeout and retries
+            dig_output=$(dig MX "$domain" +noall +answer +stats +timeout=5 +tries=2)
+            dig_exit_code=$?
+            dig_status="Unknown"
+
+            # Interpret dig results (simplified mapping)
+            # Priorities: NullMX > OK > NXDOMAIN > NoAnswer > Timeout > SERVFAIL/Error
+            if grep -q -E 'IN\s+MX\s+0\s+\.$' <<< "$dig_output"; then
+              dig_status="NullMX"
+            elif grep -q -E '^[[:alnum:].-]+\.\s+[0-9]+\s+IN\s+MX' <<< "$dig_output"; then
+              dig_status="OK"
+            elif grep -q "status: NXDOMAIN" <<< "$dig_output"; then
+              dig_status="NXDOMAIN"
+            elif grep -q "ANSWER: 0," <<< "$dig_output" && [[ $dig_exit_code -eq 0 ]]; then
+              # No answer section, exit 0 -> NoAnswer (or maybe still NXDOMAIN if authority section confirms?)
+              # Let's simplify to NoAnswer if no MX line found and exit code is 0
+              dig_status="NoAnswer"
+            elif grep -q "connection timed out" <<< "$dig_output"; then
+              dig_status="Timeout"
+            elif grep -q "status: SERVFAIL" <<< "$dig_output"; then
+              dig_status="SERVFAIL" # Often indicates server-side issue or NoNameservers
+            elif [[ $dig_exit_code -ne 0 ]]; then
+              dig_status="Error($dig_exit_code)"
+            else
+              # Fallback if none of the above matched but exit code was 0
+              dig_status="NoAnswer?"
+            fi
+
+            # Basic Comparison Logic
+            match_status="MISMATCH"
+            py_status_base=$(echo "$py_status" | cut -d':' -f1) # Get base status before ':'
+
+            if [[ "$py_status_base" == "$dig_status" ]]; then match_status="MATCH"; fi
+            if [[ "$py_status" == "OK_Fallback" && "$dig_status" == "OK" ]]; then match_status="MATCH (Fallback)"; fi
+            if [[ "$py_status_base" == "NoNameservers_FallbackFailed" && "$dig_status" == "SERVFAIL" ]]; then match_status="MATCH (Approx)"; fi
+            if [[ "$py_status" == "NoNameservers_FallbackNXDOMAIN" && "$dig_status" == "NXDOMAIN" ]]; then match_status="MATCH"; fi
+            if [[ "$py_status" == "NoNameservers_FallbackTimeout" && "$dig_status" == "Timeout" ]]; then match_status="MATCH"; fi
+            if [[ "$py_status" == "NullMX_Fallback" && "$dig_status" == "NullMX" ]]; then match_status="MATCH (Fallback)"; fi
+            if [[ "$py_status" == "NoAnswer_Fallback" && "$dig_status" == "NoAnswer" ]]; then match_status="MATCH (Fallback)"; fi
+
+            if [[ "$match_status" == "MATCH" || "$match_status" == "MATCH (Fallback)" || "$match_status" == "MATCH (Approx)" ]]; then
+              match_count=$((match_count + 1))
+            else
+              mismatch_count=$((mismatch_count + 1))
+              # Log mismatches prominently
+              echo ">>> MISMATCH FOUND <<<"
+            fi
+
+            echo "Domain: $domain | Python: $py_status | dig: $dig_status | Status: $match_status"
+            # Optionally print dig output only on mismatch?
+            # if [[ "$match_status" == "MISMATCH" ]]; then
+            #  echo "--- dig output ---"
+            #  echo "$dig_output"
+            # fi
+
+          done
+
+          echo "------------------"
+          echo "dig cross-check finished. Matches: $match_count, Mismatches: $mismatch_count"
+          echo "------------------"
+          # Optionally fail the job if too many mismatches?
+          # if [[ $mismatch_count -gt 5 ]]; then exit 1; fi
 
       - name: Commit and push changes
         run: |
           git config user.name "ghostmail-bot"
           git config user.email "bot@ghostmail.io"
-          git add data/raw_domains.txt data/disposable_emails.txt data/collector_log_*.txt
-          git commit -m "Auto-update disposable email list" || echo "No changes to commit"
+          # Add all potentially changed/created files in data/
+          git add data/raw_domains.txt data/disposable_emails.txt data/collector_log_*.txt data/mx_check_samples.json
+          # Commit only if there are changes staged
+          git diff --staged --quiet || git commit -m "Auto-update disposable email list"
           git push
