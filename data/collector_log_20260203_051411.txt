@@ -1,0 +1,172 @@
+--- GhostMail Collector Log ---
+Run timestamp: 2026-02-03T05:14:11.359466
+
+--- Fetching Summary ---
+Fetched 5133 potential domains from https://raw.githubusercontent.com/disposable-email-domains/disposable-email-domains/main/disposable_email_blocklist.conf, added 5133 new unique domains.
+Fetched 121553 potential domains from https://raw.githubusercontent.com/ivolo/disposable-email-domains/master/index.json, added 118868 new unique domains.
+Fetched 480 potential domains from https://api.tremendous.com/prohibited_email_domains.txt, added 6 new unique domains.
+Fetched 72207 potential domains from https://raw.githubusercontent.com/disposable/disposable-email-domains/master/domains.txt, added 35100 new unique domains.
+Fetched 26505 potential domains from https://raw.githubusercontent.com/disposable/disposable-email-domains/master/domains_strict.txt, added 31 new unique domains.
+Fetched 68616 potential domains from https://www.stopforumspam.com/downloads/toxic_domains_whole.txt, added 30241 new unique domains.
+Fetched 478 potential domains from https://gist.githubusercontent.com/adamloving/4401361/raw/e81212c3caecb54b87ced6392e0a0de2b6466287/temporary-email-address-domains, added 1 new unique domains.
+Fetched 3616 potential domains from https://raw.githubusercontent.com/unkn0w/disposable-email-domain-list/refs/heads/main/domains.txt, added 71 new unique domains.
+Fetched 1121 potential domains from https://raw.githubusercontent.com/GeroldSetz/emailondeck.com-domains/refs/heads/master/emailondeck.com_domains_from_bdea.cc.txt, added 0 new unique domains.
+Fetched 55891 potential domains from https://raw.githubusercontent.com/FGRibreau/mailchecker/refs/heads/master/list.txt, added 112 new unique domains.
+
+Total unique potential domains collected: 189563
+
+--- Invalid Domain Formats Excluded (Sample) ---
+'zzz.com (from Text https://raw.githubusercontent.com/disposable-email-domains/disposable-email-domains/main/disposable_email_blocklist.conf)'
+'5801000.xn--p1ai (from JSON https://raw.githubusercontent.com/ivolo/disposable-email-domains/master/index.json)'
+'9213606.xn--p1ai (from JSON https://raw.githubusercontent.com/ivolo/disposable-email-domains/master/index.json)'
+'alex.xn--6frz82g (from JSON https://raw.githubusercontent.com/ivolo/disposable-email-domains/master/index.json)'
+'desayuno-étnico.info (from JSON https://raw.githubusercontent.com/ivolo/disposable-email-domains/master/index.json)'
+'foto-en-el-álbum.info (from JSON https://raw.githubusercontent.com/ivolo/disposable-email-domains/master/index.json)'
+'gmaıl.net (from JSON https://raw.githubusercontent.com/ivolo/disposable-email-domains/master/index.json)'
+'instágram.com (from JSON https://raw.githubusercontent.com/ivolo/disposable-email-domains/master/index.json)'
+'lándwirt.com (from JSON https://raw.githubusercontent.com/ivolo/disposable-email-domains/master/index.json)'
+'planteralätt.com (from JSON https://raw.githubusercontent.com/ivolo/disposable-email-domains/master/index.json)'
+'refeição.online (from JSON https://raw.githubusercontent.com/ivolo/disposable-email-domains/master/index.json)'
+'säkerhetsväst.se (from JSON https://raw.githubusercontent.com/ivolo/disposable-email-domains/master/index.json)'
+'taxinyköping.se (from JSON https://raw.githubusercontent.com/ivolo/disposable-email-domains/master/index.json)'
+'thepiratébay.org (from JSON https://raw.githubusercontent.com/ivolo/disposable-email-domains/master/index.json)'
+'tś.xyz (from JSON https://raw.githubusercontent.com/ivolo/disposable-email-domains/master/index.json)'
+'yêuniverse.net (from JSON https://raw.githubusercontent.com/ivolo/disposable-email-domains/master/index.json)'
+'zzz.com (from JSON https://raw.githubusercontent.com/ivolo/disposable-email-domains/master/index.json)'
+'disposableemailaddresses:emailmiser.com (from Text https://api.tremendous.com/prohibited_email_domains.txt)'
+'test.com (from Text https://raw.githubusercontent.com/disposable/disposable-email-domains/master/domains.txt)'
+'zzz.com (from Text https://raw.githubusercontent.com/disposable/disposable-email-domains/master/domains.txt)'
+'zzz.com (from Text https://raw.githubusercontent.com/disposable/disposable-email-domains/master/domains_strict.txt)'
+'164.90.242.56 (from Text https://www.stopforumspam.com/downloads/toxic_domains_whole.txt)'
+'192.64.119.169 (from Text https://www.stopforumspam.com/downloads/toxic_domains_whole.txt)'
+'9213606.xn--p1ai (from Text https://www.stopforumspam.com/downloads/toxic_domains_whole.txt)'
+'admin@slotgacor777.click (from Text https://www.stopforumspam.com/downloads/toxic_domains_whole.txt)'
+'inboxgate.rest1 (from Text https://www.stopforumspam.com/downloads/toxic_domains_whole.txt)'
+'online.xn--6frz82g (from Text https://www.stopforumspam.com/downloads/toxic_domains_whole.txt)'
+'reachthroughregion.ru\\ (from Text https://www.stopforumspam.com/downloads/toxic_domains_whole.txt)'
+'synevde.com/ (from Text https://www.stopforumspam.com/downloads/toxic_domains_whole.txt)'
+'tacticaldiameter.ru\\ (from Text https://www.stopforumspam.com/downloads/toxic_domains_whole.txt)'
+'disposableemailaddresses:emailmiser.com (from Text https://gist.githubusercontent.com/adamloving/4401361/raw/e81212c3caecb54b87ced6392e0a0de2b6466287/temporary-email-address-domains)'
+'zzz.com (from Text https://raw.githubusercontent.com/unkn0w/disposable-email-domain-list/refs/heads/main/domains.txt)'
+'lmaritimen..com (from Text https://raw.githubusercontent.com/GeroldSetz/emailondeck.com-domains/refs/heads/master/emailondeck.com_domains_from_bdea.cc.txt)'
+'test.com (from Text https://raw.githubusercontent.com/FGRibreau/mailchecker/refs/heads/master/list.txt)'
+'zzz.com (from Text https://raw.githubusercontent.com/FGRibreau/mailchecker/refs/heads/master/list.txt)'
+
+--- MX Record Check Phase ---
+Total domains checked for MX records: 189563
+Domains with valid MX records (including fallback): 35887
+Domains failing MX check (No MX, NXDOMAIN, Timeout, etc.): 153676
+
+Summary of MX Check Failure Reasons:
+  - NXDOMAIN: 121202
+  - NoAnswer: 25486
+  - NoAnswer_Fallback: 320
+  - NoNameservers_FallbackFailed:NoNameservers: 980
+  - NoNameservers_FallbackNXDOMAIN: 151
+  - NoNameservers_FallbackTimeout: 1
+  - NullMX: 2984
+  - NullMX_Fallback: 2
+  - Timeout: 2550
+
+Sample of domains failing MX check (up to 100):
+0-00.usa.cc (Timeout)
+0-180.com (NoAnswer)
+0-420.com (NoAnswer)
+0-900.com (NoAnswer)
+0-aa.com (NXDOMAIN)
+0-attorney.com (NXDOMAIN)
+0-z.xyz (NXDOMAIN)
+0.pbot.tk (NXDOMAIN)
+00-tv.com (Timeout)
+00.0.gmail.com.gmail.8.3.gmail.35.cad.creou.dev (NXDOMAIN)
+00.msk.ru (NXDOMAIN)
+00000000000.pro (NXDOMAIN)
+000000pay.com (NXDOMAIN)
+00043015.com (NoAnswer)
+000521.xyz (NoAnswer)
+000777.info (NXDOMAIN)
+00082aa.com (NXDOMAIN)
+00082cc.com (NXDOMAIN)
+00082dd.com (NXDOMAIN)
+00082ff.com (NXDOMAIN)
+00082ii.com (NXDOMAIN)
+00082mm.com (NXDOMAIN)
+00082rr.com (NXDOMAIN)
+00082ss.com (NXDOMAIN)
+00082uu.com (NXDOMAIN)
+00082xx.com (NXDOMAIN)
+00082zz.com (NXDOMAIN)
+000865b.com (NXDOMAIN)
+000865e.com (NXDOMAIN)
+000865g.com (NXDOMAIN)
+000865j.com (NXDOMAIN)
+00093015.com (NoAnswer)
+0009827.com (NXDOMAIN)
+0009837.com (NXDOMAIN)
+000av.app (NXDOMAIN)
+000br88.com (NXDOMAIN)
+000email.com (NXDOMAIN)
+000invaliddomain.local (NoNameservers_FallbackNXDOMAIN)
+000xxoo.com (NXDOMAIN)
+001.igg.biz (NXDOMAIN)
+0010.monster (NXDOMAIN)
+001041.xyz (NoAnswer)
+001216.xyz (NoAnswer)
+001217.xyz (NoAnswer)
+001219.xyz (NoAnswer)
+001223.xyz (NoAnswer)
+001226.xyz (NoAnswer)
+001260.xyz (NoAnswer)
+001270.xyz (NoAnswer)
+001280.xyz (NoAnswer)
+001290.xyz (NXDOMAIN)
+001320.xyz (NXDOMAIN)
+001330.xyz (Timeout)
+00144.asia (NXDOMAIN)
+00149.asia (NXDOMAIN)
+001620.xyz (NoAnswer)
+001630.xyz (NXDOMAIN)
+001650.xyz (NXDOMAIN)
+001660.xyz (NoAnswer)
+001670.xyz (NXDOMAIN)
+00168.asia (NXDOMAIN)
+001680.xyz (NoAnswer)
+001690.xyz (NXDOMAIN)
+0018k7.com (NXDOMAIN)
+001913.com (NoAnswer)
+001916.xyz (NXDOMAIN)
+0019k7.com (NXDOMAIN)
+001xs.net (NXDOMAIN)
+001xs.org (NXDOMAIN)
+001xs.xyz (NXDOMAIN)
+002.city (NXDOMAIN)
+002288211.com (NoAnswer)
+002560.xyz (NoAnswer)
+002r.com (NullMX)
+002t.com (NoAnswer_Fallback)
+0031casino.com (NXDOMAIN)
+003271.com (Timeout)
+0033.pl (NXDOMAIN)
+003388211.com (NoAnswer)
+003565.xyz (NXDOMAIN)
+0039.cf (NXDOMAIN)
+0039.ga (NXDOMAIN)
+0039.gq (NXDOMAIN)
+0039.ml (NXDOMAIN)
+003919.com (NoAnswer)
+004697.com (NXDOMAIN)
+004gmail.com (NXDOMAIN)
+004k.com (NoAnswer)
+004r.com (NoAnswer)
+005120.xyz (NXDOMAIN)
+005588211.com (NoAnswer)
+005f4.xyz (NXDOMAIN)
+005gmail.com (NXDOMAIN)
+0066bet32.info (NoAnswer)
+0066betapp.info (NoAnswer)
+006gmail.com (NXDOMAIN)
+006j.com (NoAnswer)
+006o.com (NoAnswer_Fallback)
+006z.com (NullMX)
+007.surf (NoAnswer)
+...(total 153676 domains failed MX check)
